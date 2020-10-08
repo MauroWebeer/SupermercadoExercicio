@@ -123,10 +123,8 @@ while escolha != int(4):
             if opcao_estoque == 2:
 #ADICIONAR ITEM AO ESTOQUE
 
-                #codigo_item = input("Insira o codigo do item a ser adicionado")
-                #nome_item = input("Insira o nome do item a ser adicionado")
-
                 prod.adicionar_estoque()
 
             if opcao_estoque == 3:
-                print("ENTREI 3")
+#REMOVER ITEM DO ESTOQUE
+                prod.remover_estoque()
