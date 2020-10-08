@@ -79,20 +79,19 @@ while escolha != int(4):
 # OPÇÃO TROCAR DE USUARIO
 
     elif escolha == int(2):
-        Login = input("Digite seu login: ")
-        Senha = input("Digite sua senha: ")
+        access = False
+        while access == False:
 
-        aux = False
-        for usuario in lista_de_usuarios:
-            if usuario.login == Login or usuario.senha == Senha:
-                aux = True
-                usuario_logado = usuario
+            Login = input("Digite seu login: ")
+            Senha = input("Digite sua senha: ")
 
-        if aux == False:
-            print(f'Login ou Senha inválidos')
-            exit()
+            user = Usuario(Login, Senha)
+            logando = user.login_usuario(Login, Senha)
 
-        print("O usuario", usuario_logado.nome, "está logado")
+            if logando == False:
+                pass
+            elif logando == True:
+                access = True
 
 # OPÇÃO GERENCIAR ESTOQUE
 
@@ -113,11 +112,21 @@ while escolha != int(4):
                 opcao_estoque = int(input("Opção inválida. Tente novamente:"))
                 pass
 
+            prod = Produto()
+
             if opcao_estoque == 1:
-                print("ENTREI 1")
+# CONSULTAR ESTOQUE
+
+                estoque = prod.total_estoque()
+
 
             if opcao_estoque == 2:
-                print("ENTREI 2")
+#ADICIONAR ITEM AO ESTOQUE
+
+                #codigo_item = input("Insira o codigo do item a ser adicionado")
+                #nome_item = input("Insira o nome do item a ser adicionado")
+
+                prod.adicionar_estoque()
 
             if opcao_estoque == 3:
                 print("ENTREI 3")
