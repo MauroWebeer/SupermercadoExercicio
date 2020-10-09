@@ -51,31 +51,30 @@ while escolha != int(4):
 
     if escolha == int(1):
         print("Caixa iniciado!")
-        fex = True
-        caixa = True
         cx = Caixa()
-        while fex == True:
-            total = float(0)
 
-            while caixa != False:
+        entrar_caixa = True
+        while entrar_caixa == True:
 
-                print("ENTREI")
-                codg = input("Insira o código do produto")
-                preco = cx.passar_produto(codg)
+            preco = cx.passar_produto()
+            print("TOTAL DA COMPRA =", preco)
 
-                total += preco
-                print("Total=", total)
+            pagamento = cx.pagamento(preco)
 
-                aux = input("aperte 0 para fechar compra ou 1 para continuar")
-                caixa = cx.fechar_caixa(int(aux))
-                print(caixa)
+            entrar_caixa_1 = input("Deseja continuar (C) ou sair (S)")
 
-            print("TOTAL =", total)
-            caixa = True
+            while (True):
+                if entrar_caixa_1 != "C" and entrar_caixa_1 != "S":
+                    entrar_caixa_1 = input("Codigo invalido, tente novamente...")
+                else:
+                    break
 
-            aux2 = input("aperte 1 para nova compra ou 0 para fechar o caixa")
-            fex = cx.fechar_caixa(aux2)
+            if entrar_caixa_1 == str("C") or entrar_caixa_1 == str("c"):
+                print("Compra iniciada...")
+                entrar_caixa = True
 
+            elif entrar_caixa_1 == str("S") or entrar_caixa_1 == str("s"):
+                entrar_caixa = False
 # OPÇÃO TROCAR DE USUARIO
 
     elif escolha == int(2):

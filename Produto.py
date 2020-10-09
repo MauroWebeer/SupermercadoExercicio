@@ -12,9 +12,7 @@ class Produto:
             print(str(x[0]),"--",x[1])
 
     def adicionar_estoque(self):
-
-        aux_4 = False
-        while aux_4 == False:
+        while (True):
             resposta_1 = str(input("Quer adicionar um item ja cadastrado (C) ou um item novo (N)?"))
 
 
@@ -39,8 +37,7 @@ class Produto:
 
 
             elif resposta_1 == 'N' or resposta_1 =='n':
-                aux_2 = False
-                while aux_2 == False:
+                while (True):
                     codg = input("Insira o codigo do produto a ser adicionado")
                     nome = input("Insira o nome do produto a ser adicionado")
                     valor = input("Insira o valor do produto a ser adicionado")
@@ -74,9 +71,8 @@ class Produto:
 
     def remover_estoque(self):
          entrada = False
-         aux_5 = True
          resposta_6 = int(input("Digite o codigo do produto que deseja remover"))
-         while aux_5 == True:
+         while (True):
 
 
              mycursor.execute("SELECT codigo FROM produtos")
