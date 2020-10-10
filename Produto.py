@@ -4,20 +4,34 @@ mycursor = mydb.cursor(buffered=True)
 
 class Produto:
 
+
 # CONSULTANDO ESTOQUE
     def total_estoque(self):
+        mydb.commit()
         mycursor.execute("SELECT nome, qntd FROM produtos")
         results = mycursor.fetchall()
         for x in results:
             print(str(x[0]),"--",x[1])
 
-    def adicionar_estoque(self):
+    def adicionar_estoque(self, codigin):
         while (True):
+
+            mycursor.execute("SELECT cargo FROM funcionarios WHERE login = '%s'" % (codigin))
+            results = mycursor.fetchall()
+            lista_resultado_3 = list(sub[0] for sub in results)
+
+            if lista_resultado_3[0] == "F":
+                print("Você não está autorizado a fazer alteração no estoque.")
+                return ()
+                break
+
+
             resposta_1 = str(input("Quer adicionar um item ja cadastrado (C) ou um item novo (N)?"))
 
 
             if resposta_1 == 'C' or resposta_1 == 'c':
                 resposta_2 = int(input("Digite o codigo do produto"))
+
                 mycursor.execute("SELECT codigo FROM produtos")
                 results = mycursor.fetchall()
                 lista_resultado = list(sub[0] for sub in results)
@@ -69,10 +83,21 @@ class Produto:
                 elif resposta_4 != 0:
                     pass
 
-    def remover_estoque(self):
-         entrada = False
-         resposta_6 = int(input("Digite o codigo do produto que deseja remover"))
-         while (True):
+    def remover_estoque(self, codigin):
+
+        mycursor.execute("SELECT cargo FROM funcionarios WHERE login = '%s'" % (codigin))
+        results = mycursor.fetchall()
+        lista_resultado_3 = list(sub[0] for sub in results)
+
+        if lista_resultado_3[0] == "F":
+            print("Você não está autorizado a fazer alteração no estoque.")
+            return ()
+
+
+        entrada = False
+        resposta_6 = int(input("Digite o codigo do produto que deseja remover"))
+        while (True):
+
 
 
              mycursor.execute("SELECT codigo FROM produtos")

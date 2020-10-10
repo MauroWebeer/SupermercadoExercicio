@@ -50,13 +50,16 @@ while escolha != int(4):
 # OPÇÃO INICIAR CAIXA
 
     if escolha == int(1):
-        print("Caixa iniciado!")
         cx = Caixa()
+        escolha_caixa = cx.escaixa()
+
+        print("Caixa",escolha_caixa," iniciado!")
+
 
         entrar_caixa = True
         while entrar_caixa == True:
 
-            preco = cx.passar_produto()
+            preco = cx.passar_produto(escolha_caixa, Login)
             print("TOTAL DA COMPRA =", preco)
 
             pagamento = cx.pagamento(preco)
@@ -122,8 +125,8 @@ while escolha != int(4):
             if opcao_estoque == 2:
 #ADICIONAR ITEM AO ESTOQUE
 
-                prod.adicionar_estoque()
+                prod.adicionar_estoque(Login)
 
             if opcao_estoque == 3:
 #REMOVER ITEM DO ESTOQUE
-                prod.remover_estoque()
+                prod.remover_estoque(Login)

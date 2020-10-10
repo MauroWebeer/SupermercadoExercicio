@@ -19,7 +19,6 @@ class Usuario :
         if myresult_1 != None:
             for x in myresult_1:
                 x = str(x)
-                print(x)
                 if s == x:
                     mycursor.execute("SELECT nome FROM funcionarios WHERE login = '%s'" % (l))
                     myresult_2 = mycursor.fetchone()
