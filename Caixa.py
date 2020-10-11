@@ -23,8 +23,8 @@ class Caixa:
         while (True):
             entrada = False
             if str(prod) == "F":
-                sql = "INSERT INTO vendas(caixa, vendedor, total) VALUES (%s, %s, %s)"
-                val = (caixa_reg, vendedor_reg, total)
+                sql = "INSERT INTO vendas(caixa, vendedor, total, formapagamento) VALUES (%s, %s, %s, %s)"
+                val = (caixa_reg, vendedor_reg, total, "AA")
                 mycursor.execute(sql, val)
                 mydb.commit()
 
@@ -69,21 +69,32 @@ class Caixa:
     def pagamento(self, total):
         forma = input("Qual é a forma de pagamento? Cartão (C) ou Dinheiro (D)")
 
-        #sql = "UPDATE vendas SET formapagamento = %s WHERE venda = %s"
-        #val = (forma, venda)
-        #mycursor.execute(sql, val)
-        #mydb.commit()
 
         while forma != "C" and forma != "D" and forma != "c" and forma != "d":
             forma = input("Insira uma opção válida")
 
         if forma == "C" or forma == "c":
             print("TROCO = R$00,00", "Compra FINALIZADA")
+            mycursor.execute("SELECT venda FROM vendas where formapagamento = 'AA'")
+            results = mycursor.fetchall()
+            lista_resultado = list(sub[0] for sub in results)
+            venda_pag = lista_resultado[0]
+            sql = "UPDATE vendas SET formapagamento = %s WHERE venda = %s"
+            val = ("C", venda_pag)
+            mycursor.execute(sql, val)
+            mydb.commit()
         elif forma == "D" or forma == "d":
             receb = input("Qual o valor recebido?")
             troco = float(receb) - float(total)
             print("TROCO =R$",troco)
-
+            mycursor.execute("SELECT venda FROM vendas where formapagamento = 'AA'")
+            results = mycursor.fetchall()
+            lista_resultado = list(sub[0] for sub in results)
+            venda_pag = lista_resultado[0]
+            sql = "UPDATE vendas SET formapagamento = %s WHERE venda = %s"
+            val = ("D", venda_pag)
+            mycursor.execute(sql, val)
+            mydb.commit()
     def escaixa(self):
         while (True):
             escolha = input('''Escolha um dos caixas abaixo:

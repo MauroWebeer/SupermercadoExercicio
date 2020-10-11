@@ -37,7 +37,7 @@ while escolha != int(4):
     print('''Escolha uma das opções abaixo:
 [1] Iniciar Caixa
 [2] Trocar de Usuario
-[3] Gerenciar Estoque
+[3] Gerenciar Estoque e Vendas
 [4] Sair''')
 
     escolha = int(input())
@@ -95,22 +95,23 @@ while escolha != int(4):
             elif logando == True:
                 access = True
 
-# OPÇÃO GERENCIAR ESTOQUE
+# OPÇÃO GERENCIAR ESTOQUE E VENDAS
 
     if escolha == int(3):
         opcao_estoque = 0
 
-        while  opcao_estoque != 4:
+        while  opcao_estoque != 5:
 
             print(''' Escolha uma das opções abaixo:
             [1] Consultar Estoque
             [2] Adicionar Ítem ao Estoque
             [3] Remover ítem do Estoque
-            [4] Sair''')
+            [4] Relatórios
+            [5] Sair''')
 
             opcao_estoque = int(input())
 
-            while 0 <= opcao_estoque >= 5:
+            while 0 <= opcao_estoque >= 6:
                 opcao_estoque = int(input("Opção inválida. Tente novamente:"))
                 pass
 
@@ -130,3 +131,9 @@ while escolha != int(4):
             if opcao_estoque == 3:
 #REMOVER ITEM DO ESTOQUE
                 prod.remover_estoque(Login)
+
+#EMITIR RELATORIOS DE VENDAS
+            if opcao_estoque == 4:
+                prod.relatorio()
+
+

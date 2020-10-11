@@ -2,6 +2,8 @@ import mysql.connector
 mydb = mysql.connector.connect(host="localhost", user="root", password="knust1000", database="supermarket")
 mycursor = mydb.cursor(buffered=True)
 
+import datetime
+
 class Produto:
 
 
@@ -128,7 +130,69 @@ class Produto:
              else:
                  resposta_6 = input("Digite um codigo válido")
 
+    def relatorio(self):
+        resposta = int(input('''Escolha uma das opções
+        [1] RELATORIO DE VENDAS
+        [2] RELATORIO DE ESTOQUE
+        [3] SAIR
+        '''))
 
+        if resposta == 1:
+            #CRIAR TABELA PARA RELATORIO
+            sql = "CREATE TABLE relatorio (ident integer NOT NULL AUTO_INCREMENT, caixa varchar(10), vendedor varchar(20), total float(20), PRIMARY KEY(ident))"
+            mycursor.execute(sql)
+            mydb.commit()
+
+            #CRIAR RELATORIO
+
+            #DIA DO RELATORIO
+            date_entry = input('Digite a data (YYYY-MM-DD)')
+            year, month, day = map(int, date_entry.split('-'))
+            date1 = datetime.date(year, month, day)
+
+            caixx = ["M2654","T4863","R3648"]
+
+            for caixxs in caixx:
+                sql = "SELECT nome FROM funcionarios WHERE cargo = 'F'"
+                mycursor.execute(sql)
+                results = mycursor.fetchall()
+                lista_resultado = list(sub[0] for sub in results)
+
+                for nome in  lista_resultado:
+                    sql = "SELECT total FROM vendas WHERE vendedor = %s AND caixa = %s AND date(hora_venda) = %s"
+                    val = (nome, caixxs, date1)
+                    mycursor.execute(sql, val)
+                    results_2 = mycursor.fetchall()
+                    lista_resultado_2 = list(sub[0] for sub in results_2)
+
+                    #somando os valores de venda e guardando-os
+                    if len(lista_resultado_2) != int(0):
+                        valor_total = 0
+                        for valor in lista_resultado_2:
+                            valor_total += valor
+
+                        sql = "INSERT INTO relatorio(caixa, vendedor, total) VALUES (%s, %s, %s)"
+                        val = (caixxs, nome, valor_total)
+                        mycursor.execute(sql, val)
+                        mydb.commit()
+
+            mycursor.execute("SELECT caixa, vendedor, total FROM relatorio")
+            results_3 = mycursor.fetchall()
+            for t in results_3:
+                result = []
+                for x in t:
+                    result.append(x)
+                print('''-------------------------------------------
+''', result)
+            print('''-------------------------------------------''')
+            #DELETAR TABELA DE RELATORIO
+            sql = "DROP TABLE relatorio"
+            mycursor.execute(sql)
+            mydb.commit()
+            return()
+
+        if resposta == 3:
+            return()
 
 
 
