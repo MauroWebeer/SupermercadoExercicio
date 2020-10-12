@@ -2,6 +2,8 @@ import mysql.connector
 mydb = mysql.connector.connect(host="localhost", user="root", password="knust1000", database="supermarket")
 mycursor = mydb.cursor(buffered=True)
 
+from Produto import Produto
+
 class Caixa:
 
     def fechar_caixa(self):
@@ -13,20 +15,28 @@ class Caixa:
 
     def passar_produto(self, caixa, login):
         prod = input("Insira o codigo do produto")
+        lista_produtos = []
         mycursor.execute("SELECT nome FROM funcionarios WHERE login = '%s'" % (login))
         results = mycursor.fetchall()
         resultado = list(sub[0] for sub in results)
         vendedor_reg = str(resultado[0])
         caixa_reg = caixa
+
         total = float(0)
+        stq = Produto()
+
 
         while (True):
+            lista_produtos.append(prod)
             entrada = False
             if str(prod) == "F":
                 sql = "INSERT INTO vendas(caixa, vendedor, total, formapagamento) VALUES (%s, %s, %s, %s)"
                 val = (caixa_reg, vendedor_reg, total, "AA")
                 mycursor.execute(sql, val)
                 mydb.commit()
+
+                #for produto in lista_produtos[:-1]:
+
 
                 return (total)
 
@@ -49,16 +59,22 @@ class Caixa:
 
                 #REMOVENDO DO ESTOQUE
 
+                stq.estoque_status(prod)
+
+                stq.atualizar_estoque()
+
                 mycursor.execute("SELECT qntd FROM produtos WHERE codigo = '%s'" % (prod))
                 results_2 = mycursor.fetchall()
                 resultado_q = list(sub[0] for sub in results_2)
                 qntd_anterior = int(resultado_q[0])-int(1)
 
+
+
                 sql = "UPDATE produtos SET qntd = %s WHERE codigo = %s"
                 val = (qntd_anterior, prod)
                 mycursor.execute(sql, val)
                 mydb.commit()
-
+                #prod_ant = prod
                 prod = input("insira o codigo do produto")
 
 

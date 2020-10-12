@@ -2,7 +2,9 @@ import mysql.connector
 mydb = mysql.connector.connect(host="localhost", user="root", password="knust1000", database="supermarket")
 mycursor = mydb.cursor(buffered=True)
 
-import datetime
+from datetime import datetime
+from datetime import date
+import time
 
 class Produto:
 
@@ -71,6 +73,7 @@ class Produto:
                         val = (codg, nome, valor, quant)
                         mycursor.execute(sql, val)
                         mydb.commit()
+                        guardar_estoque()
                         return()
 
 
@@ -120,6 +123,21 @@ class Produto:
                 val = (quant_atualizada, resposta_6)
                 mycursor.execute(sql, val)
                 mydb.commit()
+
+                #Guardando estoque
+                #mycursor.execute("SELECT nome, qntd FROM produtos")
+                #result = mycursor.fetchall()
+                #lista_produtos = []
+                #for t in result:
+                #    for x in t:
+                #        lista_produtos.append(x)
+                #print(lista_produtos)
+
+                #lista_aux = str(lista_produtos)
+                #mycursor.execute("INSERT INTO estoque_status (estoque) VALUES '%s'" % (lista_aux))
+                #mydb.commit()
+
+
                 entrada = False
 
                 resposta_8 = int(input("Para remover outro produto digite 1. Para sair 0"))
@@ -195,4 +213,90 @@ class Produto:
             return()
 
 
+    def estoque_status(self, codigo):
+        codigo_prodt = int(codigo)
 
+        data_est = date.today()
+        #print(data_est)
+
+
+
+        #sql = "SELECT nome FROM produtos WHERE codigo = '%s'"
+        #val = (codigo_prodt)
+        mycursor.execute("SELECT nome FROM produtos WHERE codigo = '%s'" % (codigo_prodt))
+        results_2 = mycursor.fetchall()
+        #print(results_2)
+        nome_produto = list(sub[0] for sub in results_2)
+
+        #print(nome_produto)
+
+
+        mycursor.execute("SELECT qntd FROM produtos WHERE codigo = '%s'" % (codigo_prodt))
+        results_3 = mycursor.fetchall()
+        #print(results_3)
+        qntd_atual = list(sub[0] for sub in results_3)
+
+        #print(qntd_atual)
+
+        mycursor.execute("SELECT qntd FROM estoque_status WHERE  DATE(data_estoque) = '%s' AND produto = '%s'" % (data_est, nome_produto[0]))
+        results_4 = mycursor.fetchall()
+
+
+        #VERIFICANDO EXISTENCIA DE DADOS
+        if not len(results_4):
+            #print("ENTREI")
+            sql = "INSERT INTO estoque_status (produto, qntd) VALUES (%s, %s)"
+            val = (nome_produto[0], qntd_atual[0])
+            mycursor.execute(sql, val)
+            mydb.commit()
+
+            time.sleep(1)
+            mycursor.execute("SELECT qntd FROM estoque_status WHERE  DATE(data_estoque) = '2020-10-12' AND produto = '%s'" % (nome_produto[0]))
+            results_4 = mycursor.fetchall()
+
+        #print(results_4)
+        qntd_status = list(sub[0] for sub in results_4)
+
+        #print(qntd_status)
+
+        sql = "INSERT INTO estoque_status (produto, qntd) VALUES (%s, %s)"
+        val = (nome_produto[0], int(qntd_atual[0])-1)
+        mycursor.execute(sql, val)
+        mydb.commit()
+
+    def atualizar_estoque(self):
+        nomes = []
+        #horas = []
+
+        mycursor.execute("SELECT produto FROM estoque_status")
+        results = mycursor.fetchall()
+        for t in results:
+            for i in t:
+                if i not in nomes:
+                    nomes.append(i)
+                    print(nomes)
+
+        for nome in nomes:
+            mycursor.execute("SELECT MIN(data_estoque) FROM estoque_status WHERE produto = '%s'" %(nome))
+            results_2 = mycursor.fetchall()
+            for s in results_2:
+                for j in s:
+                    data_min = j
+
+                    mycursor.execute("SELECT MAX(data_estoque) FROM estoque_status WHERE produto = '%s'" % (nome))
+                    results_3 = mycursor.fetchall()
+                    for x in results_3:
+                        for k in x:
+                            data_max = k
+
+                            sql = "DELETE FROM estoque_status WHERE produto = %s AND data_estoque != %s AND data_estoque != %s"
+                            val = (nome, data_min, data_max)
+                            mycursor.execute(sql, val)
+                            mydb.commit()
+
+    def relatorio_estoque(self):
+        mycursor.execute("SELECT produto, qntd FROM estoque_status")
+        result = mycursor.fetchall()
+        for x in result:
+            print('''-------------------
+            ''', x)

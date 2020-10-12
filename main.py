@@ -106,12 +106,13 @@ while escolha != int(4):
             [1] Consultar Estoque
             [2] Adicionar Ítem ao Estoque
             [3] Remover ítem do Estoque
-            [4] Relatórios
-            [5] Sair''')
+            [4] Relatório de Venda 
+            [5] Relatório de Estoque
+            [6] Sair''')
 
             opcao_estoque = int(input())
 
-            while 0 <= opcao_estoque >= 6:
+            while 0 <= opcao_estoque >= 7:
                 opcao_estoque = int(input("Opção inválida. Tente novamente:"))
                 pass
 
@@ -136,4 +137,8 @@ while escolha != int(4):
             if opcao_estoque == 4:
                 prod.relatorio()
 
+#EMITIR RElATORIO DE ESTOQUE
+
+            if opcao_estoque == 5:
+                prod.relatorio_estoque()
 
